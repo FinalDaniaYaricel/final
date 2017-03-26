@@ -1,5 +1,7 @@
 <?php
 
+	
+session_start();
 require 'fb_init.php';
 
 $helper = $fb->getRedirectLoginHelper();
@@ -19,6 +21,18 @@ if (isset($accessToken)) {
   // Logged in!
   $_SESSION['facebook_access_token'] = (string) $accessToken;
 
+    require 'fb_get_data.php';
+	
+	$mysqli = new mysqli("localhost", "root", "", "final");
+	if (mysqli_connect_errno()) {
+		printf("Error de conexión: %s\n", mysqli_connect_error());
+		exit();
+	}
+	if(isset($_SESSION['facebook_access_token'])){
+		$query = "INSERT INTO `user`(`fb_id`,`fb_name`) VALUES ({$userNode->getId()},'{$userNode->getName()}')";
+		$mysqli->query($query);
+		$mysqli->close();
+	}
   // Now you can redirect to another page and use the
   // access token from $_SESSION['facebook_access_token']
   header('Location: index.php');
