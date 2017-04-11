@@ -16,28 +16,34 @@ class MyDestructableClass {
 		if (strpos($_SERVER['REQUEST_URI'], 'final/admin/statistics.php') !== false)
 			$classEstadisticas = "active";
 		
-	
 		session_start();
-		require 'fb_init.php';
-		require 'fb_get_data.php';
+		require '../fb_init.php';
+		require '../fb_get_data.php';
 		
+		if (strpos($_SERVER['REQUEST_URI'], 'final/admin/login.php') == false)
+			include 'user_valid.php';
 ?>
 		<!DOCTYPE html>
 		<html>
 			<head>
 				<meta charset="utf-8">
 				<meta name="viewport" content="width=device-width, initial-scale=1">
-				<title>Page Title</title>
+				<title>Page of Manager</title>
 				<link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
 				<script type="text/javascript" src="//code.jquery.com/jquery-1.10.2.min.js"></script>
 				<script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 				<script type="text/javascript"></script>
 				<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 				<link href="style.css" rel="stylesheet">
+				<?php //if (strpos($_SERVER['REQUEST_URI'], 'final/admin/statistics.php') !== false){ echo '<script src="https://code.highcharts.com/highcharts.src.js"></script>'; } ?>
+				<?php if (strpos($_SERVER['REQUEST_URI'], 'admin/statistics.php') !== false){ echo '<script src="https://code.highcharts.com/highcharts.src.js"></script>'; } ?>
 			</head>
-			<body>
+			<body <?php if (strpos($_SERVER['REQUEST_URI'], 'final/admin/login.php') !== false){ echo 'onload="myFunction()"'; } ?> >
 				<nav class="navbar navbar-default navbar-inverse" role="navigation">
 					<div class="container-fluid">
+						<button id="btn_collapse" type="button" class="btn" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+							<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+						</button>
 						<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 							<ul class="nav navbar-nav">
 								<li class="<?php echo $classInicio; ?>"><a href="../index.php">Inicio</a></li>
@@ -53,13 +59,6 @@ class MyDestructableClass {
 										echo '<li><p class="navbar-text">Logged in as ' . $userNode->getName() . '</p></li>';
 										echo '<li><a class="btn btn-default" href="logout.php">Logout</a></li>';
 									}
-									else{
-										$helper = $fb->getRedirectLoginHelper();
-										$permissions = [];
-										$loginUrl = $helper->getLoginUrl('http://localhost/final/admin/callback.php', $permissions);
-										echo '<li><p class="navbar-text">Login with </p></li>';
-										echo '<li><a href="'.$loginUrl.'" class="btn btn-fb"><i class="fa fa-facebook"></i> Facebook</a></li>';
-									} 
 								?>
 							</ul>
 						</div>

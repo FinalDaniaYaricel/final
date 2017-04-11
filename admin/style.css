@@ -1,3 +1,10 @@
+button#btn_collapse{
+  margin-top: 7px;
+  display:none;
+}
+@media (max-width: 767px){
+  button#btn_collapse{display:block !important;}
+}
 body{
     background:url('background.jpg');
     padding:50px;
