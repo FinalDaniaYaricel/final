@@ -3,7 +3,7 @@
 	if(isset($_SESSION['facebook_access_token'])){
 		$fb->setDefaultAccessToken($_SESSION['facebook_access_token']);
 		try {
-			$response = $fb->get('/me?fields=id,name,link,picture,birthday,location');
+			$response = $fb->get('/me?fields=id,name,link,picture');
 			$userNode = $response->getGraphUser();
 		}
 		catch(Facebook\Exceptions\FacebookResponseException $e) {

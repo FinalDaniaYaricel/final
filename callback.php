@@ -22,15 +22,24 @@ if (isset($accessToken)) {
   $_SESSION['facebook_access_token'] = (string) $accessToken;
 
     require 'fb_get_data.php';
+	include 'connection.php';
 	
-	$mysqli = new mysqli("localhost", "root", "", "final");
-	if (mysqli_connect_errno()) {
-		printf("Error de conexión: %s\n", mysqli_connect_error());
-		exit();
-	}
 	if(isset($_SESSION['facebook_access_token'])){
-		$query = "INSERT INTO `user`(`fb_id`,`fb_name`) VALUES ({$userNode->getId()},'{$userNode->getName()}')";
-		$mysqli->query($query);
+		
+		$query = "SELECT `fb_id` FROM `user` WHERE `fb_id` = {$userNode->getId()}";
+		$result = $mysqli->query($query);
+		$result = $result->fetch_array(MYSQLI_ASSOC);
+		$result = $result["fb_id"];
+		
+		if($userNode->getId() != $result){
+			$date = date("Y,m,d");
+			$query = "INSERT INTO `user`(`fb_id`,`fb_name`,`fb_picture`,`fb_link`,`date`) VALUES ({$userNode->getId()}, '{$userNode->getName()}', '{$userNode->getPicture()->getUrl()}', '{$userNode->getLink()}', '{$date}')";
+			$mysqli->query($query);
+		}else{
+			$query = "UPDATE `user` SET `fb_name`='{$userNode->getName()}', `fb_picture`='{$userNode->getPicture()->getUrl()}', `fb_link`='{$userNode->getLink()}' WHERE `fb_id` = {$userNode->getId()}";
+			$mysqli->query($query);
+		}
+		
 		$mysqli->close();
 	}
   // Now you can redirect to another page and use the
